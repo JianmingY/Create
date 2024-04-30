@@ -10,6 +10,7 @@ import yaml
 import copy
 import timm
 import numpy as np
+import PIL
 
 
 class ViT_FeatureExtractor(nn.Module):
