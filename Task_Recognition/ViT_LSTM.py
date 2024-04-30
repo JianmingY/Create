@@ -22,8 +22,9 @@ class ViT_FeatureExtractor(nn.Module):
         self.vit.head = nn.Identity()
 
         # Add a new linear layer for feature extraction
-        self.linear1 = nn.Linear(self.vit.head.in_features, num_output_features)
-
+        # Assuming the output features of the previous layer is 512
+        num_previous_layer_features = 512
+        self.linear1 = nn.Linear(num_previous_layer_features, num_output_features)
         # Add a sigmoid activation function
         self.sig = nn.Sigmoid()
 
