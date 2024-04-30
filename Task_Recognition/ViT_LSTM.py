@@ -9,6 +9,7 @@ import torch.nn.functional as F
 import yaml
 import copy
 import timm
+import numpy as np
 
 
 class ViT_FeatureExtractor(nn.Module):
