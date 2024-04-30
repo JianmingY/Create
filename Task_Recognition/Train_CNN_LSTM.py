@@ -724,7 +724,7 @@ def main(args):
             os.mkdir(foldDir)
         args.save_location = foldDir
         # network = CNN_LSTM()
-        network = ViT_LSTM()
+
         train_data,val_data = loadData(dataCSVFile,args.validation_percentage)
         class_counts = train_data[labelName].value_counts()
         classes = sorted(dataCSVFile[labelName].unique())
@@ -733,6 +733,7 @@ def main(args):
                                  sorted(dataCSVFile[labelName].unique())))
 
         num_input_features = args.cnn_features
+        network = ViT_LSTM(512, num_classes, num_input_features, args.lstm_sequence_length, args.device)
         # resnetModel = network.createCNNModel(num_input_features, num_classes).cuda(gpu)
         # if not os.path.exists(os.path.join(foldDir, "resnet.pth")):
         #     trainResnet(foldDir, resnetModel,train_data,val_data,args,labelName=labelName)
