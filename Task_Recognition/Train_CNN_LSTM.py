@@ -380,8 +380,8 @@ def trainVitExtractor(foldDir, model, training_data, val_data, args, labelName="
 
     train_dataset = TRAN_Dataset(training_data, labelName, transforms, balance=args.balance_cnn, augmentations=args.augment_cnn)
     val_dataset = TRAN_Dataset(val_data, labelName, transforms, balance=False)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
-    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.cnn_batch, shuffle=True)
+    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=args.cnn_batch, shuffle=False)
 
     classes = sorted(training_data[labelName].unique())
     lr = args.cnn_lr
