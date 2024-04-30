@@ -39,8 +39,10 @@ class ViT_FeatureExtractor(nn.Module):
         self.output_head = nn.Linear(num_output_features, num_classes)
 
     def forward(self, x):
-        # Apply the transformations
-        x = self.transforms(x)
+        # Check if x is a PIL Image or numpy ndarray
+        if isinstance(x, (np.ndarray, PIL.Image.Image)):
+            # Apply the transformations
+            x = self.transforms(x)
 
         # Pass the input through the Vision Transformer model
         x = self.vit(x)
