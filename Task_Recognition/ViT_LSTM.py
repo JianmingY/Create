@@ -37,6 +37,24 @@ class ViT_FeatureExtractor(nn.Module):
 
         # Add a new linear layer for the output
         self.output_head = nn.Linear(num_output_features, num_classes)
+
+    def forward(self, x):
+        # Apply the transformations
+        x = self.transforms(x)
+
+        # Pass the input through the Vision Transformer model
+        x = self.vit(x)
+
+        # Pass the output through the linear layer
+        x = self.linear1(x)
+
+        # Apply the sigmoid activation function
+        x = self.sig(x)
+
+        # Pass the output through the output head
+        x = self.output_head(x)
+
+        return x
 class ViT_LSTM:
     def __init__(self, num_output_features, num_classes, num_features, sequence_length, device):
         self.vit_model = ViT_FeatureExtractor(num_output_features, num_classes)
