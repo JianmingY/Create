@@ -3,7 +3,7 @@ import os
 import cv2
 import torch
 from torch import nn, optim
-from torchvision import models
+from torchvision import models,transforms
 from torch.nn.utils import weight_norm
 import torch.nn.functional as F
 import yaml
@@ -15,6 +15,13 @@ class ViT_FeatureExtractor(nn.Module):
     def __init__(self, num_output_features, num_classes):
         super(ViT_FeatureExtractor, self).__init__()
 
+        # Define the transformations
+        self.transforms = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+
         # Load the pretrained Vision Transformer model
         self.vit = timm.create_model('vit_base_patch16_224', pretrained=True)
 
@@ -22,24 +29,14 @@ class ViT_FeatureExtractor(nn.Module):
         self.vit.head = nn.Identity()
 
         # Add a new linear layer for feature extraction
-        # Assuming the output features of the previous layer is 512
         num_previous_layer_features = 512
         self.linear1 = nn.Linear(num_previous_layer_features, num_output_features)
+
         # Add a sigmoid activation function
         self.sig = nn.Sigmoid()
 
         # Add a new linear layer for the output
         self.output_head = nn.Linear(num_output_features, num_classes)
-
-    def forward(self, x):
-        # Pass the input through the Vision Transformer model
-        x = self.vit(x)
-
-        # Pass the output through the linear layer
-        x = self.linear1(x)
-
-        # Apply the sigmoid activation function
-        x = self.sig(x)
 class ViT_LSTM:
     def __init__(self, num_output_features, num_classes, num_features, sequence_length, device):
         self.vit_model = ViT_FeatureExtractor(num_output_features, num_classes)
