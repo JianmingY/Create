@@ -40,7 +40,7 @@ class CNNDataset(Dataset):
         else:
             return len(self.data)
 
-    def selectBestFrames(self, n_clusters=200):
+    def selectBestFrames(self, n_clusters=400):
         # Assuming each row in self.datacsv represents a frame
         # and the columns are the features of the frames
 
