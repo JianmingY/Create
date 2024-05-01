@@ -11,7 +11,6 @@ Traceback (most recent call last):
     if not isinstance(self.num_samples, int) or self.num_samples <= 0:
   File "/home/jovyan/conda-envs/createPytorchEnv/lib/python3.9/site-packages/torch/utils/data/sampler.py", line 149, in num_samples
     return len(self.data_source)
-  File "/home/jovyan/Desktop/ChallengeGithub/Central_Line_Challenge/Task_Recognition/DatasetGenerator.py", line 37, in __len__
-    if len(self.sample_mapping[label]) < minCount:
-KeyError: 'Cross-section'
-
+  File "/home/jovyan/Desktop/ChallengeGithub/Central_Line_Challenge/Task_Recognition/DatasetGenerator.py", line 39, in __len__
+    return round(minCount * len(self.labels))  #
+OverflowError: cannot convert float infinity to integer
