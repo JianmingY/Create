@@ -21,14 +21,11 @@ class CNNDataset(Dataset):
         self.labelName = labelName
         self.labels = sorted(self.datacsv[self.labelName].unique())
 
-        
-
-        self.balanceDataByVideo()
         # Select the best frames
         best_frames_indices = self.selectBestFrames()
         self.datacsv = self.datacsv.iloc[best_frames_indices]
 
-        
+        self.balanceDataByVideo()
         self.img_size = img_size
         self.augmentations = augmentations
         self.currentIndexes = dict(zip([i for i in range(len(self.labels))],[0 for i in range(len(self.labels))]))
@@ -37,8 +34,10 @@ class CNNDataset(Dataset):
         if self.balanced:
             minCount = math.inf
             for label in self.labels:
-                if len(self.sample_mapping[label]) < minCount:
+                if label in self.sample_mapping and len(self.sample_mapping[label]) < minCount:
                     minCount = len(self.sample_mapping[label])
+            if minCount == math.inf:  # Add this check
+                return 1  # Return a default value
             return round(minCount * len(self.labels))
         else:
             return len(self.data)
@@ -63,7 +62,6 @@ class CNNDataset(Dataset):
             best_frames_indices.append(numpy.argmin(distances))
 
         return best_frames_indices
-
 
     def convertCategoricalToOneHot(self,label):
         one_hot_label = numpy.zeros((len(self.labels)))
@@ -100,6 +98,9 @@ class CNNDataset(Dataset):
         return rotImage
 
     def getBalancedSample(self):
+        self.labels = sorted(self.datacsv[self.labelName].unique())
+        self.currentIndexes = dict(zip([i for i in range(len(self.labels))], [0 for i in range(len(self.labels))]))
+
         idx = random.randint(0, len(self.labels) - 1)
         sample_idx = self.currentIndexes[idx]
         label = self.labels[idx]
