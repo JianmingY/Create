@@ -34,9 +34,9 @@ class CNNDataset(Dataset):
         if self.balanced:
             minCount = math.inf
             for label in self.labels:
-                if len(self.sample_mapping[label]) < minCount:
+                if label in self.sample_mapping and len(self.sample_mapping[label]) < minCount:
                     minCount = len(self.sample_mapping[label])
-            return round(minCount*len(self.labels)) #
+            return round(minCount * len(self.labels))  #
         else:
             return len(self.data)
 
