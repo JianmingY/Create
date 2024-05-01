@@ -10,6 +10,7 @@ import math
 from sklearn.cluster import KMeans
 from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
+import pandas as pd
 
 class CNNDataset(Dataset):
     def __init__(self,datacsv,labelName,transforms,balance=True,img_size = 224,augmentations=False):
