@@ -42,6 +42,11 @@ class CNNDataset(Dataset):
     def selectBestFrames(self, n_clusters=200):
         # Assuming each row in self.datacsv represents a frame
         # and the columns are the features of the frames
+
+        # Preprocess the DataFrame to ensure it only contains numeric data and no NaN values
+        self.datacsv = self.datacsv.apply(pd.to_numeric, errors='coerce')  # Convert non-numeric data to NaN
+        self.datacsv = self.datacsv.fillna(0)  # Fill NaN values with 0
+
         frames = self.datacsv.values
 
         # Apply KMeans clustering
