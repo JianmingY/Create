@@ -37,7 +37,7 @@ class CNNDataset(Dataset):
                 if label in self.sample_mapping and len(self.sample_mapping[label]) < minCount:
                     minCount = len(self.sample_mapping[label])
             if minCount == math.inf:  # Add this check
-                return 0  # Return a default value
+                return 1  # Return a default value
             return round(minCount * len(self.labels))
         else:
             return len(self.data)
