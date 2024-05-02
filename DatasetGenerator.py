@@ -21,11 +21,12 @@ class CNNDataset(Dataset):
         self.labelName = labelName
         self.labels = sorted(self.datacsv[self.labelName].unique())
 
+
+
+        self.balanceDataByVideo()
         # Select the best frames
         best_frames_indices = self.selectBestFrames()
         self.datacsv = self.datacsv.iloc[best_frames_indices]
-
-        self.balanceDataByVideo()
         self.img_size = img_size
         self.augmentations = augmentations
         self.currentIndexes = dict(zip([i for i in range(len(self.labels))],[0 for i in range(len(self.labels))]))
