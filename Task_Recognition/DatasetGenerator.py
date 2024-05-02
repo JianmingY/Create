@@ -9,6 +9,7 @@ from PIL import Image
 import math
 from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
+import numpy as np
 
 class CNNDataset(Dataset):
     def __init__(self,datacsv,labelName,transforms,balance=True,img_size = 224,augmentations=False):
@@ -67,6 +68,30 @@ class CNNDataset(Dataset):
         rotImage = cv2.warpAffine(image,rot_mat,image.shape[1::-1],flags=cv2.INTER_LINEAR)
         return rotImage
 
+    def tiltImage(self, image):
+        h, w = image.shape[:2]
+
+        # Define the four points in the source image
+        src = np.float32([[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]])
+
+        # Define the four points in the destination image
+        dst_options = [
+            np.float32([[w * 0.3, 0], [w * 0.7, 0], [0, h - 1], [w - 1, h - 1]]),
+            np.float32([[w * 0.2, 0], [w * 0.8, 0], [0, h - 1], [w - 1, h - 1]]),
+            np.float32([[w * 0.1, 0], [w * 0.9, 0], [0, h - 1], [w - 1, h - 1]])
+        ]
+
+        # Randomly choose one set of destination points
+        dst = random.choice(dst_options)
+
+        # Get the perspective transformation matrix
+        M = cv2.getPerspectiveTransform(src, dst)
+
+        # Apply the perspective transformation
+        tilted_image = cv2.warpPerspective(image, M, (w, h))
+
+        return tilted_image
+
     def getBalancedSample(self):
         idx = random.randint(0, len(self.labels) - 1)
         sample_idx = self.currentIndexes[idx]
@@ -87,6 +112,9 @@ class CNNDataset(Dataset):
                 # rotate
                 angle = random.randint(1, 359)
                 img = self.rotateImage(img, angle)
+            elif preprocessing == 3:
+                # tilt
+                img = self.tiltImage(img)
             img_tensor = torch.from_numpy(img)
         self.currentIndexes[idx] = (self.currentIndexes[idx] + 1) % (len(self.sample_mapping[label]))
         if self.currentIndexes[idx] == 0:
