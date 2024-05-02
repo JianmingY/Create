@@ -102,7 +102,7 @@ class CNNDataset(Dataset):
 
         idx = random.randint(0, len(self.labels) - 1)
         sample_idx = int(self.currentIndexes[idx])
-        label = self.labels[idx]
+        label = int(self.labels[idx])
         print(self.sample_mapping, "+", label, "+", sample_idx)
         sample = self.sample_mapping[label][sample_idx]
         imgFilePath = os.path.join(self.datacsv["Folder"][sample],self.datacsv["FileName"][sample])
