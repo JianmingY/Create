@@ -101,7 +101,7 @@ class CNNDataset(Dataset):
         self.currentIndexes = dict(zip([i for i in range(len(self.labels))], [0 for i in range(len(self.labels))]))
 
         idx = random.randint(0, len(self.labels) - 1)
-        sample_idx = self.currentIndexes[idx]
+        sample_idx = int(self.currentIndexes[idx])
         label = self.labels[idx]
         print(self.sample_mapping, "+", label, "+", sample_idx)
         sample = self.sample_mapping[label][sample_idx]
